@@ -1,0 +1,47 @@
+name: Conda Constructor Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os:
+          - windows-latest
+          - macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          platform: ${{ matrix.os }}
+          conda-version: 'latest'
+
+      - name: Create Conda environment
+        run: conda create --name build-env --file environment.yml
+
+      - name: Activate Conda environment
+        run: conda activate build-env
+
+      - name: Install Conda Constructor
+        run: pip install constructor 
+
+      - name: change directory
+        run: cd constructor
+
+      - name: Build Conda installer
+        run: constructor .
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: conda-installer-${{ matrix.os }}
+          path: installer/
