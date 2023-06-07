@@ -1,0 +1,15 @@
+name: ImSwitchUC2
+version: v1.0.0
+installer_type: all
+
+channels:
+  - http://repo.anaconda.com/pkgs/main/
+
+specs:
+  - python
+  - conda
+
+welcome_image: logoUC2.png
+
+post_install: post_install.sh  # [unix]
+post_install: post_install.bat  # [windows]
