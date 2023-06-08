@@ -34,7 +34,11 @@ jobs:
         run: conda install constructor -y
 
       - name: change directory
-        run: cd constructor
+        run: |
+          cd constructor
+          dir
+          SET var=%cd%
+          ECHO %var%
 
       - name: Build Conda installer
         run: constructor .
