@@ -13,11 +13,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Miniconda
-        uses: conda-incubator/setup-miniconda@v2
+      - uses: conda-incubator/setup-miniconda@v2
         with:
-          platform: 'windows'
-          conda-version: 'latest'
+          miniconda-version: "latest"
+          activate-environment: myenv
+
+      - name: Bash
+        shell: bash -el {0}
+        run: |
+          conda info
+          conda list
 
       - name: Create Conda environment
         run: conda create --name myenv python=3.9
