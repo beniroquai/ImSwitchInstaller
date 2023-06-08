@@ -33,15 +33,14 @@ jobs:
       - name: Install Conda Constructor
         run: conda install constructor -y
 
-      - name: change directory
+      - name: Build Conda installer
         run: |
           cd constructor
           dir
           SET var=%cd%
           ECHO %var%
-
-      - name: Build Conda installer
-        run: constructor .
+          constructor construct.yaml
+          dir
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
