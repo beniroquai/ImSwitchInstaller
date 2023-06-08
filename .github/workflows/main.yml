@@ -19,10 +19,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v2
         with:
-          python-version: '3.10'
+          conda-version: 'latest'
+
+      - name: Create Conda environment
+        run: conda create --name myenv python=3.9
+
+      - name: Activate Conda environment
+        run: conda activate myenv
 
       - name: Install Conda Constructor
         run: conda install constructor -y
