@@ -1,4 +1,4 @@
-name: Conda Constructor Build
+name: Conda Constructor Build (Windows)
 
 on:
   push:
@@ -7,13 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os:
-          - windows-latest
-          - macos-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository
@@ -22,6 +16,7 @@ jobs:
       - name: Set up Miniconda
         uses: conda-incubator/setup-miniconda@v2
         with:
+          platform: 'windows'
           conda-version: 'latest'
 
       - name: Create Conda environment
