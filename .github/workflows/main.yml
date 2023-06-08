@@ -39,11 +39,11 @@ jobs:
           dir
           SET var=%cd%
           ECHO %var%
-          constructor construct.yaml
+          python -m constructor .
           dir
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: conda-installer-${{ matrix.os }}
+          name: ImSwitchUC2-v1.0.0-Windows-x86_64.exe
           path: installer/
