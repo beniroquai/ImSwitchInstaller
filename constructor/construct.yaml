@@ -6,10 +6,10 @@ channels:
   - http://repo.anaconda.com/pkgs/main/
 
 specs:
-  - python
+  - python=3.9
   - conda
 
 welcome_image: logoUC2.png
 
-post_install: post_install.sh  # [unix]
-post_install: post_install.bat  # [windows]
+
+post_install: post_install.bat
