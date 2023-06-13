@@ -1,0 +1,49 @@
+name: Conda Constructor Build (Windows)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: "latest"
+          activate-environment: myenv
+
+      - name: Bash
+        shell: bash -el {0}
+        run: |
+          conda info
+          conda list
+
+      - name: Create Conda environment
+        run: conda create --name myenv python=3.9
+
+      - name: Activate Conda environment
+        run: conda activate myenv
+
+      - name: Install Conda Constructor
+        run: conda install constructor -y
+
+      - name: Build Conda installer
+        run: |
+          cd constructor
+          dir
+          SET var=%cd%
+          ECHO %var%
+          python -m constructor .
+          dir
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ImSwitchUC2-v1.0.0-Windows-x86_64.exe
+          path: installer/
