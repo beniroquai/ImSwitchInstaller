@@ -11,5 +11,8 @@ specs:
 
 welcome_image: logoUC2.png
 
+extra_files:
+  - install.py
+  
 
 post_install: post_install.bat

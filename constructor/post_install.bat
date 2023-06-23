@@ -1,43 +1,20 @@
-@echo off
+echo Added by test-install script > "%PREFIX%\test_install_sentinel.txt"
+SetLocal EnableDelayedExpansion
+
+set PREFIX=C:\ProgramData\imswitchuc2
+echo %PREFIX%
 
 REM Download the driver file
-echo Downloading driver file...
-powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://www.silabs.com/documents/public/software/CP210x_Universal_Windows_Driver.zip', 'driver_file.zip')"
+echo Downloading driver file and install ImSwitch...
 
-REM Extract the driver file
-echo Extracting driver file...
-powershell -Command "Expand-Archive -Path 'driver_file.zip' -DestinationPath 'driver' -Force"
+echo "%PREFIX%\Scripts\activate.bat"
 
-REM Install the driver
-echo Installing driver...
-pnputil -i -a driver\silabser.inf
+call "%PREFIX%\Scripts\activate.bat"
+python "%PREFIX%\install.py"
 
-REM Cleanup downloaded files
-echo Cleaning up...
-del driver_file.zip
-rd /s /q driver
-
-conda activate "$PREFIX"
-
-REM Set the download URL and file name
-set "DOWNLOAD_URL=https://github.com/openUC2/ImSwitch/archive/refs/tags/v1.2.15.zip"
-set "ZIP_FILE=latest.zip"
-
-REM Set the installation directory
-set "INSTALL_DIR=ImSwitch"
-
-REM Download the latest release
-echo Downloading the latest release...
-curl -L -o "%ZIP_FILE%" "%DOWNLOAD_URL%"
-
-REM Unzip the downloaded file
-echo Unzipping the release...
-powershell -Command "Expand-Archive -Path '%ZIP_FILE%' -DestinationPath '%INSTALL_DIR%' -Force"
-
-REM Install the package using pip
-echo Installing the package...
-cd "%INSTALL_DIR%"
-pip install -e . 
-
-echo Installation completed successfully.
-
+@ECHO ON
+call "%PREFIX%\Scripts\activate.bat
+conda info || exit 1
+conda config --show-sources || exit 1
+conda config --show --json | python -c "import sys, json; info = json.loads(sys.stdin.read()); assert 'conda-forge' in info['channels'], info
+python %$PREFIX/%install.py"

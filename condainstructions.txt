@@ -1,0 +1,7 @@
+
+  conda install conda-build -y
+  conda build --output-folder ./conda-out/ ./conda/meta.yaml 
+  conda install anaconda-client
+  pip install  urllib3==1.26.14 --force-reinstall
+  anaconda login --username youseetoo  --password GITHUB_SECRET
+  anaconda upload conda-out/noarch/imswitchuc2-0.1.0-py_0.tar.bz2

@@ -22,6 +22,7 @@ by constructor as well.
 
 Finally, to create a Miniconda installer, you simply run (in this directory):
 
+    $ cd constructor .
     $ constructor .
     ...
     $ ls -lh Mini*
