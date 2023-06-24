@@ -108,4 +108,4 @@ except Exception as e:
 
 # Cleanup downloaded files
 print("Cleaning up...")
-os.remove( os.path.join(ZIP_FILE))
+os.remove(os.path.join(path_variable,ZIP_FILE))
