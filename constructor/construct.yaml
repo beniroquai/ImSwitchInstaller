@@ -1,4 +1,4 @@
-name: ImSwitchUC2
+name: ImSwitchOpenUC2
 version: v1.0.0
 installer_type: all
 
@@ -8,11 +8,13 @@ channels:
 specs:
   - python=3.9
   - conda
+  - pywin32
 
 welcome_image: logoUC2.png
 
 extra_files:
   - install.py
+  - install_driver.py
   
 
 post_install: post_install.bat

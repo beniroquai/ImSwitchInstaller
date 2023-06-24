@@ -6,42 +6,30 @@ import subprocess
 import requests
 import os
 import tempfile
-
+import ctypes, sys
 path_variable = os.environ.get('PREFIX')
 
-#path_variable = os.path.join(tempfile.gettempdir(),"ImSwitchUC2")
+if path_variable is None:
+    print("Adjusting path to tmp")
+    path_variable = os.path.join(tempfile.gettempdir(),"ImSwitchUC2")
 #path_variable = os.path.join("C:\\Users\\diederichbenedict\\Downloads")
 #path_variable = "C:\\ProgramData\\imswitchuc
 # 2"d
+
+print("In the following we try to download ImSwitch from github and install it aloongside the necessary drivers. For this you need admin control. Please hit Enter to continue...")
+input()
 try:
     os.mkdir(path_variable)
 except:
     pass
 print("Path: "+path_variable)    
 os.chdir(path_variable)
-try:
-    
-    # Download the driver file
-    print("Downloading driver file...")
-    urllib.request.urlretrieve("https://www.silabs.com/documents/public/software/CP210x_Universal_Windows_Driver.zip", os.path.join(path_variable,"driver_file.zip"))
+def run_as_admin(script_path):
+    # Re-run the program with admin rights
+    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, script_path, None, 1)
 
-    # Extract the driver file
-    print("Extracting driver file...")
-    with zipfile.ZipFile("driver_file.zip", "r") as zip_ref:
-        zip_ref.extractall("driver")
-
-    # Install the driver
-    print("Installing driver...")
-    subprocess.call(["pnputil", "-i", "-a", "driver\silabser.inf"])
-
-    # Cleanup downloaded files
-    print("Cleaning up...")
-    os.remove("driver_file.zip")
-    shutil.rmtree("driver")
-
-except Exception as e:
-    print("Driver could not be downloaded: ")
-    print(e)
+#run_as_admin(os.path.join(path_variable,"install_driver.py"))
+run_as_admin(os.path.join("C:\\Users\\diederichbenedict\\Dropbox\\Dokumente\\Promotion\\PROJECTS\\ImSwitchInstaller\\constructor\\install_driver.py"))
 
 try:
     # Set the download URL and file name
@@ -61,7 +49,7 @@ try:
     DOWNLOAD_URL = f"https://github.com/{owner}/{repo}/archive/{commit_sha}.zip"
     print("Download URL:", DOWNLOAD_URL)
 
-    ZIP_FILE = "latest.zip"
+    ZIP_FILE = "latestImSwitch.zip"
 
     # Set the installation directory
     INSTALL_DIR = "ImSwitch"
@@ -70,12 +58,11 @@ try:
     print("Downloading the latest release...")
     urllib.request.urlretrieve(DOWNLOAD_URL, ZIP_FILE)
 
-
-
     # Unzip the downloaded file
     print("Unzipping the release...")
     with zipfile.ZipFile(ZIP_FILE, "r") as zip_ref:
         zip_ref.extractall(INSTALL_DIR)
+        
     
     print("changing into unzip directory:"+INSTALL_DIR)
     os.chdir(INSTALL_DIR)
@@ -86,23 +73,39 @@ try:
     # Install the package using pip
     print("Installing the package...")
     os.chdir(INSTALL_PATH)
-    command = [os.path.join(path_variable, "python.exe"), "-m", "pip", "install", "-e", ".", "--user"]
+    #command = [os.path.join(path_variable, "python.exe"), "-m", "pip", "install", "-e", "."#]
+    command = [os.path.join(path_variable, "Scripts", "pip3.exe"), "install", "-e", "."]
 
     # Execute the command
-    result = subprocess.run(command, capture_output=True, text=True)
+    #result = subprocess.run(command, capture_output=True, text=True)
+    
+    # Start the subprocess
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+
+    # Print each line of output as it is produced
+    for line in iter(process.stdout.readline, ''):
+        print(line, end='')
+
+    # Wait for the subprocess to finish
+    process.stdout.close()
+    process.wait()
 
     # Print the output
-    print("STDOUT:", result.stdout)
-    print("STDERR:", result.stderr)
+    #print("STDOUT:", result.stdout)
+    #print("STDERR:", result.stderr)
 
     # Check the exit code
-    if result.returncode == 0:
-        print("Command executed successfully")
-    else:
-        print(f"Command exited with code {result.returncode}")
+    #if result.returncode == 0:
+    #    print("Command executed successfully")
+    #else:
+    #    print(f"Command exited with code {result.returncode}")
 
     print("Installation completed successfully.")
 
 except Exception as e:
     print("Installation of ImSwitch not succesful.")
     print(e)
+
+# Cleanup downloaded files
+print("Cleaning up...")
+os.remove( os.path.join(ZIP_FILE))
