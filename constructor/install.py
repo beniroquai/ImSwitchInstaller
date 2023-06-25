@@ -7,6 +7,10 @@ import requests
 import os
 import tempfile
 import ctypes, sys
+import os
+import pythoncom
+from win32com.shell import shell, shellcon
+
 path_variable = os.environ.get('PREFIX')
 
 if path_variable is None:
@@ -109,3 +113,26 @@ except Exception as e:
 # Cleanup downloaded files
 print("Cleaning up...")
 os.remove(os.path.join(path_variable,ZIP_FILE))
+
+# Creating Icon/Shortcut on Desktop
+shortcut_path = os.path.join(os.path.expanduser("~"), "Desktop", "ImSwitch.lnk")
+icon_path = os.path.join(path_variable, "icon.ico")  # Replace with your icon path
+target = os.path.join(path_variable, "python.exe"
+args = "-m imswitch"
+
+shortcut = pythoncom.CoCreateInstance(
+    shell.CLSID_ShellLink,
+    None,
+    pythoncom.CLSCTX_INPROC_SERVER,
+    shell.IID_IShellLink
+)
+
+shortcut.SetPath(target)
+shortcut.SetArguments(args)
+shortcut.SetIconLocation(icon_path, 0)
+
+persist_file = shortcut.QueryInterface(pythoncom.IID_IPersistFile)
+persist_file.Save(shortcut_path, 0)
+
+print("Hit enter to continue.")
+input()

@@ -15,6 +15,7 @@ welcome_image: logoUC2.png
 extra_files:
   - install.py
   - install_driver.py
+  - icon.ico
   
 
 post_install: post_install.bat
