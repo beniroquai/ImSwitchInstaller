@@ -78,7 +78,7 @@ try:
     print("Installing the package...")
     os.chdir(INSTALL_PATH)
     #command = [os.path.join(path_variable, "python.exe"), "-m", "pip", "install", "-e", "."#]
-    command = [os.path.join(path_variable, "Scripts", "pip3.exe"), "install", "-e", "."]
+    command = [os.path.join(path_variable, "Scripts", "pip3.exe"), "install", "-e", ".", "--no-cache-dir", "--force-reinstall", "--user"]
 
     # Execute the command
     #result = subprocess.run(command, capture_output=True, text=True)
@@ -114,25 +114,31 @@ except Exception as e:
 print("Cleaning up...")
 os.remove(os.path.join(path_variable,ZIP_FILE))
 
-# Creating Icon/Shortcut on Desktop
-shortcut_path = os.path.join(os.path.expanduser("~"), "Desktop", "ImSwitch.lnk")
-icon_path = os.path.join(path_variable, "icon.ico")  # Replace with your icon path
-target = os.path.join(path_variable, "python.exe"
-args = "-m imswitch"
+print("Creating the Icon on the Desktop.")
 
-shortcut = pythoncom.CoCreateInstance(
-    shell.CLSID_ShellLink,
-    None,
-    pythoncom.CLSCTX_INPROC_SERVER,
-    shell.IID_IShellLink
-)
+try:
+    # Creating Icon/Shortcut on Desktop
+    shortcut_path = os.path.join(os.path.expanduser("~"), "Desktop", "ImSwitchUC2.lnk")
+    icon_path = os.path.join(path_variable, "icon.ico")  # Replace with your icon path
+    target = os.path.join(path_variable, "python.exe")
+    args = "-m imswitch"
 
-shortcut.SetPath(target)
-shortcut.SetArguments(args)
-shortcut.SetIconLocation(icon_path, 0)
+    shortcut = pythoncom.CoCreateInstance(
+        shell.CLSID_ShellLink,
+        None,
+        pythoncom.CLSCTX_INPROC_SERVER,
+        shell.IID_IShellLink
+    )
 
-persist_file = shortcut.QueryInterface(pythoncom.IID_IPersistFile)
-persist_file.Save(shortcut_path, 0)
+    shortcut.SetPath(target)
+    shortcut.SetArguments(args)
+    shortcut.SetIconLocation(icon_path, 0)
 
+    persist_file = shortcut.QueryInterface(pythoncom.IID_IPersistFile)
+    persist_file.Save(shortcut_path, 0)
+    print("...was succesful")
+except Exception as e:
+    print("...was not succesful")
+    print(e)
 print("Hit enter to continue.")
 input()

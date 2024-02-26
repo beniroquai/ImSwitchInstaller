@@ -7,20 +7,23 @@ import requests
 import os
 import tempfile
 
-path_variable = os.environ.get('PREFIX')
-
-if path_variable is None:
-    print("Adjusting path to tmp")
-    path_variable = os.path.join(tempfile.gettempdir(),"ImSwitchUC2")
-    print(path_variable)
-
 try:
-    os.mkdir(path_variable)
-except:
-    print("Could not creae folder")
-    pass
-print("Path: "+path_variable)    
+    path_variable = os.environ.get('PREFIX')
 
+    if path_variable is None:
+        print("Adjusting path to tmp")
+        path_variable = os.path.join(tempfile.gettempdir(),"ImSwitchUC2")
+        print(path_variable)
+
+    try:
+        os.mkdir(path_variable)
+    except:
+        print("Could not creae folder")
+        pass
+    print("Path: "+path_variable)    
+except Exception as e:
+    print("Something went wrong: ")
+    print(e)
 try:
     
     import ctypes, sys
